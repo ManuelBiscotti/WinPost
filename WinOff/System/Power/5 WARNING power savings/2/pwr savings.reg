@@ -1,0 +1,20 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0001]
+"LTRSnoopL1Latency"="1"
+"LTRSnoopL0Latency"="1"
+"LTRNoSnoopL1Latency"="1"
+"LTRMaxNoSnoopLatency"="1"
+"KMD_RpmComputeLatency"="1"
+"DalUrgentLatencyNs"="1"
+"memClockSwitchLatency"="1"
+"PP_RTPMComputeF1Latency"="1"
+"PP_DGBMMMaxTransitionLatencyUvd"="1"
+"PP_DGBPMMaxTransitionLatencyGfx"="1"
+"DalNBLatencyForUnderFlow"="1"
+"BGM_LTRSnoopL1Latency"="1"
+"BGM_LTRSnoopL0Latency"="1"
+"BGM_LTRNoSnoopL1Latency"="1"
+"BGM_LTRNoSnoopL0Latency"="1"
+"BGM_LTRMaxSnoopLatencyValue"="1"
+"BGM_LTRMaxNoSnoopLatencyValue"="1"

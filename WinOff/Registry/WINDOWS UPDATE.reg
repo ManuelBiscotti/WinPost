@@ -1,0 +1,46 @@
+Windows Registry Editor Version 5.00
+
+; WINDOWS UPDATE
+
+; disable automatic updates
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU]
+"AUOptions"=dword:00000002
+; "NoAutoUpdate"=dword:00000001 ; Breaks 'Receive updates for other Microsoft products'
+; "AutoInstallMinorUpdates"=dword:00000000 ; enable notifications for security updates only (do not auto-download)
+
+; prevent automatic upgrade to windows 11 and defer quality updates for 1 year
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+"TargetReleaseVersion"=dword:00000001
+"TargetReleaseVersionInfo"="22H2"
+"ProductVersion"="Windows 10"
+"DeferFeatureUpdates"=dword:00000001
+"DeferFeatureUpdatesPeriodInDays"=dword:0000016d
+"DeferQualityUpdates"=dword:00000001
+"DeferQualityUpdatesPeriodInDays"=dword:00000007
+
+; block workplace join prompt
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WorkplaceJoin]
+"BlockAADWorkplaceJoin"=dword:00000001
+
+; disable driver searching & updates
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Update]
+"ExcludeWUDriversInQualityUpdate"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Update]
+"ExcludeWUDriversInQualityUpdate"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
+"ExcludeWUDriversInQualityUpdate"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+"ExcludeWUDriversInQualityUpdate"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Update\ExcludeWUDriversInQualityUpdate]
+"value"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata]
+"PreventDeviceMetadataFromNetwork"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching]
+"DontSearchWindowsUpdate"=dword:00000001
+"SearchOrderConfig"=dword:00000000

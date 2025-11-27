@@ -1,0 +1,18 @@
+1: download gpuz (pic 4)
+2: hit the arrow icon and export file and save the rom file (pic 5 and 6)
+3: open the MPT tool and select your amd gpu (pic 7)
+4: at the bottom of MPT select load and choose the rom file from before (pic 8 and 9)
+5: optionally select Zero RPM to keep your gpu fan running at all times (pic 10)
+6: open feature control (pic 11) and check all the options for ds_ (pic 12)
+IMPORTANT DO NOT DO EXTRAS OR YOU CAN BRICK YOURSELF
+7: click write sppt and then exit and restart (pic 13)
+
+
+
+
+
+
+
+
+
+

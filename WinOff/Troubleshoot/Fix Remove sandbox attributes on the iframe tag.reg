@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Disable or configure PDF.js, the built-in PDF viewer in Firefox
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Mozilla\Firefox\PDFjs]
+"Enabled"=dword:00000001

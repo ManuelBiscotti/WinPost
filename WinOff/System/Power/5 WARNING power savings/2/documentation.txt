@@ -1,0 +1,14 @@
+Latency Adjustments:
+Settings like LTRSnoopL1Latency, LTRNoSnoopL1Latency, etc., control the latency related to the Snoop and No-Snoop states. These states are used for memory and processor communication to reduce delays during data transactions, particularly in systems with high-speed memory or GPUs.
+
+Power and Memory Management:
+KMD_RpmComputeLatency, memClockSwitchLatency, and similar settings fine-tune the system's power management, optimizing the time taken for switching between different power states (such as low-power modes) and memory clocks.
+
+Graphics and Display Latencies:
+PP_DGBMMMaxTransitionLatencyUvd, PP_DGBPMMaxTransitionLatencyGfx, and similar keys focus on reducing transition latency for graphics processing, ensuring smoother rendering and transitions when the GPU is engaged or switching between modes.
+
+Urgent Latency Handling:
+DalUrgentLatencyNs likely controls how urgently certain system tasks are handled, reducing delay in critical tasks.
+
+BGM (Background Management):
+The BGM_* settings adjust background management latencies, focusing on how the system handles snoop/no-snoop and maximum latency during background tasks or lower-priority operations.

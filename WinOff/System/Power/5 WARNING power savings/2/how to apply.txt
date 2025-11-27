@@ -1,0 +1,7 @@
+visit HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318} in the registry editor
+
+look through all the 0000, 0001 etc until inside of them you find the key for your driver desc in which it matches your gpu
+
+then right click on the reg file, edit it, and replace the 0000 with whatever your gpu is
+
+control s and close out, now run the .reg
