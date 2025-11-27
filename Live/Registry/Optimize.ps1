@@ -775,6 +775,17 @@ Windows Registry Editor Version 5.00
 "AvgCPULoadFactor"=dword:00000019
 "ScanAvgCPULoadFactor"=dword:00000019
 
+; dwm tweaks
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows]
+"DesktopHeapLogging"=dword:00000000
+"DwmInputUsesIoCompletionPort"=dword:00000000
+"EnableDwmInputProcessing"=dword:00000000
+
+; increase explorer responses
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mouhid\Parameters]
+"TreatAbsolutePointerAsAbsolute"=dword:00000001
+"TreatAbsoluteAsRelative"=dword:00000000
+
 
 
 
@@ -1672,10 +1683,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RtkAudioUniversalService]
 "Start"=dword:00000004
-
-; remove shortcut arrow overlay icon 
-; [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons]
-; "29"="C:\\Windows\\blanc.ico"
 '@
 Set-Content -Path "$env:TEMP\Registry Optimize.reg" -Value $MultilineComment -Force
 # import reg file
@@ -1695,15 +1702,13 @@ Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Defender\Windows Defe
 Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Defender\Windows Defender Verification" *> $null
 
 # SECURITY
-# set account passwords to never expire				
+# set account password to never expire	
 Get-LocalUser | ForEach-Object { Set-LocalUser -Name $_.Name -PasswordNeverExpires $true | Out-Null }
 # Disable Defender telemetry
 Set-MpPreference -CloudBlockLevel 0 -Force | Out-Null
 Set-MpPreference -SubmitSamplesConsent 2 -Force | Out-Null
 Set-MpPreference -MAPSReporting 0 -Force | Out-Null
 Set-MpPreference -DisableCoreServiceECSIntegration $true -Force | Out-Null
-# Set-MpPreference -DisableCoreService1DSTelemetry $false -Force  -ErrorAction SilentlyContinue | Out-Null
-
 # Disable Mitigations
 $cmd = @'
 @echo off
@@ -1773,18 +1778,16 @@ Set-Content -Path "$env:TEMP\Mitigations_0.cmd" -Value $cmd -Encoding ASCII
 # Pause Windows updates
 Get-FileFromWeb "https://github.com/Aetherinox/pause-windows-updates/raw/refs/heads/main/windows-updates-pause.reg" "$env:TEMP\windows-updates-pause.reg"				
 Regedit.exe /S "$env:TEMP\windows-updates-pause.reg"				
-Start-Sleep -seconds 2				
-# Sets Windows Update to recommended settings				
+Start-Sleep -seconds 2	
+# Sets Windows Update to recommended settings			
 Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/ChrisTitusTech/winutil/raw/refs/heads/main/functions/public/Invoke-WPFUpdatessecurity.ps1" -OutFile "$env:TEMP\Invoke-WPFUpdatessecurity.ps1"		
 (Get-Content "$env:TEMP\Invoke-WPFUpdatessecurity.ps1") | Where-Object {$_ -notmatch '\[System\.Windows\.MessageBox'} | Set-Content -Path "$env:TEMP\Invoke-WPFUpdatessecurity.ps1" -Encoding UTF8
-				
 . "$env:TEMP\Invoke-WPFUpdatessecurity.ps1"
 if (Get-Command Invoke-WPFUpdatessecurity -ErrorAction SilentlyContinue) {
     Invoke-WPFUpdatessecurity *> $null 2>&1
 }
 
 # TWEAKS
-
 # imribiy
 # This reg file automatically applies Media Player setup phase as you would like to complete, no document history, no data sharing.
 Get-FileFromWeb "https://github.com/imribiy/useful-regs-bats/raw/refs/heads/main/MediaPlayer.reg" "$env:TEMP\MediaPlayer.reg"
@@ -1866,19 +1869,22 @@ Regedit.exe /S "$env:TEMP\Priority Control Tweaks.reg"
 Start-Sleep -seconds 2
 
 # MEMORY
-# Disable Memory Compression and Page Combining, Enable Application Pre-Launch
+# Disable Memory Compression
 Disable-MMAgent -MemoryCompression *> $null
+# Disable Page Combining
 Disable-MMAgent -PageCombining *> $null
+# Enable Application PreLaunch
 Enable-MMAgent -ApplicationPreLaunch *> $null
-
-# Group svchost.exe processes	
+# Group svchost.exe processes
 $ram = (Get-CimInstance -ClassName Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1kb | Out-Null	
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value $ram -Force | Out-Null			
 
+# DISK
 # Optimize NTFS for performance
 fsutil behavior set disablelastaccess 1 | Out-Null     			
 fsutil behavior set disable8dot3 1 | Out-Null   
 
+# BOOT
 # BCDEdit Tweaks
 netsh interface tcp set global autotuninglevel=disabled | Out-Null
 bcdedit /set disabledynamictick Yes | Out-Null
@@ -1992,8 +1998,3 @@ public class Wallpaper {
     [Wallpaper]::SystemParametersInfo(0x0014, 0, $WallpaperPath, 3) | Out-Null				
 	
 }else{$null}
-
-
-
-
-pause

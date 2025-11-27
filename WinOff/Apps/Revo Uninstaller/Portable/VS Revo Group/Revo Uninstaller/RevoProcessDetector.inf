@@ -1,0 +1,112 @@
+[Version]
+Signature   = "$Windows NT$"
+Class       = "ActivityMonitor"                         ;This is determined by the work this filter driver does
+ClassGuid   = {b86dff51-a31e-4bac-b3cf-e8cfe75c9fc2}    ;This value is determined by the Class
+Provider    = %VSRG%
+DriverVer   = 03/28/2024,1.0.0.0
+CatalogFile = RevoProcessDetector.cat
+
+
+[DestinationDirs]
+DefaultDestDir          = 12
+RevoProcessDetector.DriverFiles     = 12            ;%windir%\system32\drivers
+
+;;
+;; Default install sections
+;;
+[DefaultInstall]
+OptionDesc          = %ServiceDescription%
+CopyFiles           = RevoProcessDetector.DriverFiles
+
+[DefaultInstall.Services]
+AddService          = %ServiceName%,,RevoProcessDetector.Service
+
+[DefaultInstall.ntamd64]
+OptionDesc          = %ServiceDescription%
+CopyFiles           = RevoProcessDetector.DriverFiles
+
+[DefaultInstall.ntamd64.Services]
+AddService          = %ServiceName%,,RevoProcessDetector.Service
+
+[DefaultInstall.ntx86]
+OptionDesc          = %ServiceDescription%
+CopyFiles           = RevoProcessDetector.DriverFiles
+
+[DefaultInstall.ntx86.Services]
+AddService          = %ServiceName%,,RevoProcessDetector.Service
+
+;;
+;; Default uninstall sections
+;;
+
+[DefaultUninstall]
+DelFiles   = RevoProcessDetector.DriverFiles
+LegacyUninstall=1
+
+[DefaultUninstall.ntamd64]
+DelFiles   = RevoProcessDetector.DriverFiles
+LegacyUninstall=1
+
+[DefaultUninstall.ntamd64.Services]
+DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
+
+[DefaultUninstall.ntx86]
+DelFiles   = RevoProcessDetector.DriverFiles
+LegacyUninstall=1
+
+[DefaultUninstall.ntx86.Services]
+DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
+
+;
+; Services Section
+;
+
+[RevoProcessDetector.Service]
+DisplayName      = %ServiceName%
+Description      = %ServiceDescription%
+ServiceBinary    = %12%\%DriverName%.sys        ;%windir%\system32\drivers\
+Dependencies     = FltMgr
+ServiceType      = 2                            ;SERVICE_FILE_SYSTEM_DRIVER
+StartType        = 3                            ;SERVICE_DEMAND_START
+ErrorControl     = 1                            ;SERVICE_ERROR_NORMAL
+LoadOrderGroup = "FSFilter Activity Monitor"
+AddReg           = RevoProcessDetector.AddRegistry
+
+;
+; Registry Modifications
+;
+
+[RevoProcessDetector.AddRegistry]
+HKR,"Instances","DefaultInstance",0x00000000,%DefaultInstance%
+HKR,"Instances\"%Instance1.Name%,"Altitude",0x00000000,%Instance1.Altitude%
+HKR,"Instances\"%Instance1.Name%,"Flags",0x00010001,%Instance1.Flags%
+
+;
+; Copy Files
+;
+
+[RevoProcessDetector.DriverFiles]
+%DriverName%.sys
+
+[SourceDisksFiles]
+RevoProcessDetector.sys = 1,,
+
+[SourceDisksNames]
+1 = %DiskId1%,,,
+
+;;
+;; String Section
+;;
+
+[Strings]
+VSRG			= "VS Revo Group"
+ServiceDescription      = "Revo Uninstaller Process Detector"
+ServiceName             = "RevoProcessDetector"
+DriverName              = "RevoProcessDetector"
+DiskId1                 = "RevoProcessDetector Device Installation Disk"
+
+;Instances specific information.
+DefaultInstance         = "RevoProcessDetector - Top Instance"
+Instance1.Name          = "RevoProcessDetector - Top Instance"
+Instance1.Altitude      = "370331"
+Instance1.Flags         = 0x0          ; Set automatic attachments
