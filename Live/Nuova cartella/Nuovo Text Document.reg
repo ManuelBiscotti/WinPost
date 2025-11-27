@@ -1,0 +1,26 @@
+Windows Registry Editor Version 5.00
+
+; Visual Effects
+[HKEY_CURRENT_USER\Control Panel\Desktop]
+"FontSmoothing"="2"
+"UserPreferencesMask"=hex:90,12,03,80,10,00,00,00
+"DragFullWindows"="1"
+
+; animate windows when minimizing and maximizing
+[HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics]
+"MinAnimate"="0"
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"ListviewAlphaSelect"=dword:00000001
+"IconsOnly"=dword:00000000
+"TaskbarAnimations"=dword:00000000 ; animations in the taskbar
+"ListviewShadow"=dword:00000001
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM]
+"EnableAeroPeek"=dword:00000000
+"AlwaysHibernateThumbnails"=dword:00000000
+
+; adjust for best performance of programs
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\PriorityControl]
+"ConvertibleSlateMode"=dword:00000000
+"Win32PrioritySeparation"=dword:00000026

@@ -1,0 +1,18 @@
+{
+    "WPFTweaks":  [
+                      "WPFTweaksTeredo",
+                      "WPFTweaksWifi",
+                      "WPFTweaksRazerBlock",
+                      "WPFTweaksDebloatAdobe",
+                      "WPFTweaksDisableWpbtExecution",
+                      "WPFTweaksDisableLMS1",
+                      "WPFTweaksConsumerFeatures",
+                      "WPFTweaksTele",
+                      "WPFTweaksAH",
+                      "WPFTweaksBlockAdobeNet",
+                      "WPFTweaksLoc",
+                      "WPFTweaksDisableExplorerAutoDiscovery",
+                      "WPFTweaksPowershell7Tele",
+                      "WPFTweaksDisableCrossDeviceResume",			  				
+                   ]
+}
