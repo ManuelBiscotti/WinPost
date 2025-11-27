@@ -1,0 +1,3 @@
+Hardware-accelerated GPU scheduling = On
+Variable refresh rate = Off
+Optimizations for windowed games = On

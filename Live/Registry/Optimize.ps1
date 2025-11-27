@@ -289,9 +289,9 @@ Windows Registry Editor Version 5.00
 ; enable virtual memory
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management]
 "ClearPageFileAtShutdown"=dword:00000000
-"DisablePagingExecutive"=dword:00000001
+"DisablePagingExecutive"=dword:00000001 ; disallow drivers to get paged into virtual memory
 "HotPatchTableSize"=dword:00001000
-"LargeSystemCache"=dword:00000000
+"LargeSystemCache"=dword:00000000 ; use big system memory caching to improve microstuttering
 "NonPagedPoolQuota"=dword:00000000
 "NonPagedPoolSize"=dword:00000000
 "PagedPoolQuota"=dword:00000000
@@ -315,12 +315,29 @@ Windows Registry Editor Version 5.00
 "PhysicalAddressExtension"=dword:00000001
 "ExistingPageFiles"=hex(7):5c,00,3f,00,3f,00,5c,00,43,00,3a,00,5c,00,70,00,61,\
   00,67,00,65,00,66,00,69,00,6c,00,65,00,2e,00,73,00,79,00,73,00,00,00,00,00
+"SimulateCommitSavings"=dword:00000000
+"TrackLockedPages"=dword:00000000
+"TrackPtes"=dword:00000000
+"DisablePageCombining"=dword:00000001 ; disable pagecombining
+"IoPageLockLimit"=dword:ffffffff ; disable iopagelock
 
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
+"AlpcWakePolicy"=dword:00000001
+"DisablePagingExecutive"=dword:00000001 ; disallow drivers to get paged into virtual memory (duplicate key)
+
+; disable fetch feature that may cause higher disk usage
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters]
 "EnablePrefetcher"=dword:00000000
 "EnableBootTrace"=dword:00000000
 "EnableSuperfetch"=dword:00000000
-; "SfTracingState"=dword:00000001
+"SfTracingState"=dword:00000000
+
+; disable fth (fault tolerant heap)
+[HKEY_LOCAL_MACHINE\Software\Microsoft\FTH]
+"Enabled"=dword:00000000
+
+; remove fth state key
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\FTH\State]
 
 ; disable error reporting
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting]
@@ -758,9 +775,8 @@ Windows Registry Editor Version 5.00
 "AvgCPULoadFactor"=dword:00000019
 "ScanAvgCPULoadFactor"=dword:00000019
 
-; disable fth
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\FTH]
-"Enabled"=dword:00000000
+
+
 
 ; --SERVICES--
 
@@ -1672,11 +1688,11 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like "*OneDrive*" -or $_.TaskNam
 # disable automatic disk defragmentation
 schtasks /Change /DISABLE /TN "\Microsoft\Windows\Defrag\ScheduledDefrag" | Out-Null	
 # disable security scheduled tasks
-schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable -ErrorAction SilentlyContinue | Out-Null
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /Disable -ErrorAction SilentlyContinue | Out-Null
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /Disable -ErrorAction SilentlyContinue | Out-Null
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /Disable -ErrorAction SilentlyContinue | Out-Null
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable -ErrorAction SilentlyContinue | Out-Null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" *> $null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" *> $null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Defender\Windows Defender Cleanup" *> $null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" *> $null
+Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Defender\Windows Defender Verification" *> $null
 
 # SECURITY
 # set account passwords to never expire				
@@ -1795,6 +1811,14 @@ Start-Sleep -seconds 2
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/InterruptSteering/Disable%20InterruptSteering.reg" "$env:TEMP\Disable InterruptSteering.reg"
 Regedit.exe /S "$env:TEMP\Disable InterruptSteering.reg"
 Start-Sleep -seconds 2
+# DPC Kernel Tweaks
+# Download, remove only the final pause line, execute
+Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/Kernel/DPC%20Kernel%20Tweaks/Apply%20DPC%20Kernel%20Tweaks.bat" "$env:TEMP\Apply DPC Kernel Tweaks.bat"
+(Get-Content "$env:TEMP\Apply DPC Kernel Tweaks.bat") -replace 'pause', '' | Out-File "$env:TEMP\Apply DPC Kernel Tweaks.bat" -Encoding ASCII
+& "$env:TEMP\Apply DPC Kernel Tweaks.bat" | Out-Null
+# Kernel Tweaks
+Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/Kernel/Kernel%20Tweaks/Apply%20Kernel%20Tweaks.bat" "$env:TEMP\Apply Kernel Tweaks.bat"
+Start-Process -Wait "$env:TEMP\Apply Kernel Tweaks.bat"
 # Officially-Verified
 # Resource Sets
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Officially-Verified/raw/refs/heads/main/Resource%20Sets/Resource%20Sets.reg" "$env:TEMP\Resource Sets.reg"
@@ -1811,8 +1835,6 @@ Start-Sleep -seconds 2
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/Power%20Tweaks%20(12-Nov-25)/Power%20Tweaks.reg" "$env:TEMP\Power Tweaks.reg"
 Regedit.exe /S "$env:TEMP\Power Tweaks.reg"
 Start-Sleep -seconds 2
-
-
 
 # HakanFly
 # Windows Tweaks
@@ -1843,17 +1865,22 @@ Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/
 Regedit.exe /S "$env:TEMP\Priority Control Tweaks.reg"
 Start-Sleep -seconds 2
 
+# MEMORY
+# Disable Memory Compression and Page Combining, Enable Application Pre-Launch
+Disable-MMAgent -MemoryCompression *> $null
+Disable-MMAgent -PageCombining *> $null
+Enable-MMAgent -ApplicationPreLaunch *> $null
 
-# Group svchost.exe processes				
-$ram = (Get-CimInstance -ClassName Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1kb
+# Group svchost.exe processes	
+$ram = (Get-CimInstance -ClassName Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1kb | Out-Null	
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value $ram -Force | Out-Null			
 
-# Optimize NTFS for performance				
+# Optimize NTFS for performance
 fsutil behavior set disablelastaccess 1 | Out-Null     			
 fsutil behavior set disable8dot3 1 | Out-Null   
 
 # BCDEdit Tweaks
-netsh interface tcp set global autotuninglevel=disabled
+netsh interface tcp set global autotuninglevel=disabled | Out-Null
 bcdedit /set disabledynamictick Yes | Out-Null
 bcdedit /set useplatformtick Yes | Out-Null
 bcdedit /set nx AlwaysOff | Out-Null
@@ -1878,6 +1905,13 @@ bcdedit /set sos no | Out-Null
 # bcdedit /set usephysicaldestination no | Out-Null # forces Windows to use logical destination mode for interrupts	
 # bcdedit /set uselegacyapicmode no | Out-Null # disable legacy APIC
 
+# NETWORK
+# Gaming OS Tweaker - network
+Get-FileFromWeb "https://github.com/sherifmagdy32/gaming_os_tweaker/raw/refs/heads/main/scripts/tweaks/network.cmd" "$env:TEMP\network.cmd"
+& "$env:TEMP\network.cmd" *> $null
+# HakanFly - WINDOWS-NETWORK-OPTIMIZATIONS
+Invoke-RestMethod "https://github.com/HakanFly/WINDOWS-NETWORK-OPTIMIZATIONS/raw/refs/heads/main/W10ANDW11-NETWORK-TCP-BACKSUBOPTIMIZATION.ps1" | Invoke-Expression | Out-Null
+
 # PERSONALIZATION
 # Download blanc.ico into C:\Windows
 Get-FileFromWeb "https://github.com/benzaria/remove_shortcut_arrow/raw/refs/heads/main/blanc.ico" "C:\\Windows\\blanc.ico"
@@ -1885,7 +1919,7 @@ Get-FileFromWeb "https://github.com/benzaria/remove_shortcut_arrow/raw/refs/head
 if (-not (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons")) {New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" -Force | Out-Null}
 # Set the shortcut arrow overlay to a blank icon
 New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" -Name "29" -PropertyType String -Value "C:\Windows\blanc.ico" -Force | Out-Null
-Write-Host "Shortcut arrow overlay icon removed." -ForegroundColor Green
+
 # Windows 10 Stuff
 if ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuild -le 19045) {
 
