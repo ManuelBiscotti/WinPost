@@ -1,0 +1,9 @@
+For 1080p/1440p gaming, best GPUs for this system:
+
+* **NVIDIA RTX 4060** – low power (\~115W), DLSS 3
+* **AMD RX 7600** – similar performance, cheaper
+* **NVIDIA RTX 3060** – older, still solid
+
+All safe with 400W PSU. Go RTX 4060 if budget allows.
+
+If you game on console like me, buying a dedicated GPU is pointless for audio/mixing tasks and a waste of money.
