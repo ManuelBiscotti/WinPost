@@ -1,0 +1,1 @@
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SoftwareProtectionPlatform" /v Activation /t REG_DWORD /d 0 /f
