@@ -4,12 +4,6 @@ Desktop.ini
 *.tmp
 *.temp
 
-# Executables and installers
-*.exe
-*.msi
-*.bat
-*.cmd
-
 # Logs and cache
 *.log
 *.cache
