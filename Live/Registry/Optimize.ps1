@@ -34,7 +34,8 @@ function Get-FileFromWeb {
 }
 
 $ProgressPreference = 'SilentlyContinue'
-# FR33THY Registry
+# FR33THY
+# Registry
 $scriptContent = (Invoke-WebRequest "https://github.com/FR33THYFR33THY/Ultimate-Windows-Optimization-Guide/raw/refs/heads/main/6%20Windows/12%20Registry.ps1" -UseBasicParsing).Content
 # Remove the restart prompt from ALL options
 $scriptContent = $scriptContent -replace 'Write-Host "Restart to apply \. \. \."\s*\$\w+ = \$Host\.UI\.RawUI\.ReadKey\("NoEcho,IncludeKeyDown"\)', '' 
@@ -48,8 +49,42 @@ if ($scriptContent -match '1 \{\s*([\s\S]*?)\s*\}\s*2 \{') {
     # Run the extracted option 1 code
     Invoke-Expression $option1Code
 } else {Write-Host "Failed to extract option 1 code" -ForegroundColor Red}
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
+# Signout Lockscreen
+$scriptContent = (Invoke-WebRequest "https://github.com/FR33THYFR33THY/Ultimate-Windows-Optimization-Guide/raw/refs/heads/main/6%20Windows/13%20Signout%20Lockscreen.ps1" -UseBasicParsing).Content
+# Remove the restart prompt from ALL options
+$scriptContent = $scriptContent -replace 'Write-Host "Restart to apply \. \. \."\s*\$\w+ = \$Host\.UI\.RawUI\.ReadKey\("NoEcho,IncludeKeyDown"\)', '' 
+# remove exit
+$scriptContent = $scriptContent -replace 'exit', ''
+# Remove the show-menu calls that cause looping
+$scriptContent = $scriptContent -replace 'show-menu', ''
+# Extract and run just the option 1 code
+if ($scriptContent -match '1 \{\s*([\s\S]*?)\s*\}\s*2 \{') {
+    $option1Code = $matches[1]
+    # Run the extracted option 1 code
+    Invoke-Expression $option1Code
+} else {Write-Host "Failed to extract option 1 code" -ForegroundColor Red}
+Start-Sleep -seconds 1
+$scriptContent = (Invoke-WebRequest "https://github.com/FR33THYFR33THY/Ultimate-Windows-Optimization-Guide/raw/refs/heads/main/6%20Windows/12%20Registry.ps1" -UseBasicParsing).Content
+# Remove the restart prompt from ALL options
+$scriptContent = $scriptContent -replace 'Write-Host "Restart to apply \. \. \."\s*\$\w+ = \$Host\.UI\.RawUI\.ReadKey\("NoEcho,IncludeKeyDown"\)', '' 
+# remove exit
+$scriptContent = $scriptContent -replace 'exit', ''
+# Remove the show-menu calls that cause looping
+$scriptContent = $scriptContent -replace 'show-menu', ''
+# Extract and run just the option 1 code
+if ($scriptContent -match '1 \{\s*([\s\S]*?)\s*\}\s*2 \{') {
+    $option1Code = $matches[1]
+    # Run the extracted option 1 code
+    Invoke-Expression $option1Code
+} else {Write-Host "Failed to extract option 1 code" -ForegroundColor Red}
+Start-Sleep -seconds 1
 
+# Win11Debloat - Regfiles
+& ([scriptblock]::Create((Invoke-RestMethod "https://debloat.raphi.re/"))) -NoRestartExplorer -Silent -DisableStartPhoneLink -DisableTelemetry -DisableSuggestions	-DisableLockscreenTips	-DisableSettings365Ads -DisableSettingsHome -DisableRecall	-DisablePaintAI	-DisableNotepadAI -HideIncludeInLibrary	-HideShare
+Clear-Host
+
+# My Tweaks
 # create reg file
 $MultilineComment = @'
 Windows Registry Editor Version 5.00
@@ -1687,7 +1722,7 @@ Windows Registry Editor Version 5.00
 Set-Content -Path "$env:TEMP\Registry Optimize.reg" -Value $MultilineComment -Force
 # import reg file
 Regedit.exe /S "$env:TEMP\Registry Optimize.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 
 # TASKS
 # disable OneDrive and Edge scheduled tasks
@@ -1778,7 +1813,7 @@ Set-Content -Path "$env:TEMP\Mitigations_0.cmd" -Value $cmd -Encoding ASCII
 # Pause Windows updates
 Get-FileFromWeb "https://github.com/Aetherinox/pause-windows-updates/raw/refs/heads/main/windows-updates-pause.reg" "$env:TEMP\windows-updates-pause.reg"				
 Regedit.exe /S "$env:TEMP\windows-updates-pause.reg"				
-Start-Sleep -seconds 2	
+Start-Sleep -seconds 1
 # Sets Windows Update to recommended settings			
 Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/ChrisTitusTech/winutil/raw/refs/heads/main/functions/public/Invoke-WPFUpdatessecurity.ps1" -OutFile "$env:TEMP\Invoke-WPFUpdatessecurity.ps1"		
 (Get-Content "$env:TEMP\Invoke-WPFUpdatessecurity.ps1") | Where-Object {$_ -notmatch '\[System\.Windows\.MessageBox'} | Set-Content -Path "$env:TEMP\Invoke-WPFUpdatessecurity.ps1" -Encoding UTF8
@@ -1792,7 +1827,7 @@ if (Get-Command Invoke-WPFUpdatessecurity -ErrorAction SilentlyContinue) {
 # This reg file automatically applies Media Player setup phase as you would like to complete, no document history, no data sharing.
 Get-FileFromWeb "https://github.com/imribiy/useful-regs-bats/raw/refs/heads/main/MediaPlayer.reg" "$env:TEMP\MediaPlayer.reg"
 Regedit.exe /S "$env:TEMP\MediaPlayer.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 
 # TairikuOkami
 # Windows Tweaks
@@ -1806,14 +1841,14 @@ Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads
 Start-Process -Wait "$env:TEMP\DWMAdjustablesd-jdallmann.bat"
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/DWM/DWMFlipPresent.reg" "$env:TEMP\DWMFlipPresent.reg"
 Regedit.exe /S "$env:TEMP\DWMFlipPresent.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/DWM/DWMImmediateRender-Kizzimo.bat" "$env:TEMP\DWMImmediateRender-Kizzimo.bat"
 Start-Process -Wait "$env:TEMP\DWMImmediateRender-Kizzimo.bat"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # Disable InterruptSteering
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/InterruptSteering/Disable%20InterruptSteering.reg" "$env:TEMP\Disable InterruptSteering.reg"
 Regedit.exe /S "$env:TEMP\Disable InterruptSteering.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # DPC Kernel Tweaks
 # Download, remove only the final pause line, execute
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/Kernel/DPC%20Kernel%20Tweaks/Apply%20DPC%20Kernel%20Tweaks.bat" "$env:TEMP\Apply DPC Kernel Tweaks.bat"
@@ -1826,18 +1861,18 @@ Start-Process -Wait "$env:TEMP\Apply Kernel Tweaks.bat"
 # Resource Sets
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Officially-Verified/raw/refs/heads/main/Resource%20Sets/Resource%20Sets.reg" "$env:TEMP\Resource Sets.reg"
 Regedit.exe /S "$env:TEMP\Resource Sets.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # SerializeTimerExpiration (Value 1).reg
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Officially-Verified/raw/refs/heads/main/Serialize%20Timer%20Expiration/SerializeTimerExpiration%20(Value%201).reg" "$env:TEMP\SerializeTimerExpiration (Value 1).reg"
 Regedit.exe /S "$env:TEMP\SerializeTimerExpiration (Value 1).reg"
 # Power Profile Events Priorities Tweaks
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/Power%20Profile%20Events%20Priorities%20Tweaks/Power%20Profile%20Events%20Priorities%20Tweaks%20-%20Tweaked.reg" "$env:TEMP\Power Profile Events Priorities Tweaks - Tweaked.reg"
 Regedit.exe /S "$env:TEMP\Power Profile Events Priorities Tweaks - Tweaked.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # Power Tweaks
 Get-FileFromWeb "https://github.com/AlchemyTweaks/Verified-Tweaks/raw/refs/heads/main/Power%20Tweaks%20(12-Nov-25)/Power%20Tweaks.reg" "$env:TEMP\Power Tweaks.reg"
 Regedit.exe /S "$env:TEMP\Power Tweaks.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 
 # HakanFly
 # Windows Tweaks
@@ -1846,7 +1881,7 @@ Start-Sleep -seconds 2
 # Enable Context Menu entries to use RunAsTI
 Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/Enable_RunAsTI.reg" "$env:TEMP\Enable_RunAsTI.reg"
 Regedit.exe /S "$env:TEMP\Enable_RunAsTI.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # Kernel Tweaks
 # Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/Kernel%20Tweaks/Kernel_Tweaks.reg" "$env:TEMP\Kernel_Tweaks.reg"
 # Regedit.exe /S "$env:TEMP\Kernel_Tweaks.reg"
@@ -1854,20 +1889,19 @@ Start-Sleep -seconds 2
 # DPC Tweaks
 Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/Kernel%20Tweaks/DPC%20Tweaks/DPC%20Tweaks.reg" "$env:TEMP\DPC Tweaks.reg"
 Regedit.exe /S "$env:TEMP\DPC Tweaks.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # SplitLargeCaches
 Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/Kernel%20Tweaks/SplitLargeCaches/SplitLargeCaches.reg" "$env:TEMP\SplitLargeCaches.reg"
 Regedit.exe /S "$env:TEMP\SplitLargeCaches.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # NVMe Tweaks
 Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/NVMe%20Tweaks/NVMe%20%20Tweaks.reg" "$env:TEMP\NVMe Tweaks.reg"
 Regedit.exe /S "$env:TEMP\NVMe Tweaks.reg"
-Start-Sleep -seconds 2
+Start-Sleep -seconds 1
 # Priority Control Tweaks
 Get-FileFromWeb "https://github.com/HakanFly/Windows-Tweaks/raw/refs/heads/main/Priority%20Control%20Tweaks/Priority%20Control%20Tweaks.reg" "$env:TEMP\Priority Control Tweaks.reg"
 Regedit.exe /S "$env:TEMP\Priority Control Tweaks.reg"
-Start-Sleep -seconds 2
-
+Start-Sleep -seconds 1
 # MEMORY
 # Disable Memory Compression
 Disable-MMAgent -MemoryCompression *> $null
@@ -1910,14 +1944,12 @@ bcdedit /set bootems no | Out-Null
 bcdedit /set sos no | Out-Null
 # bcdedit /set usephysicaldestination no | Out-Null # forces Windows to use logical destination mode for interrupts	
 # bcdedit /set uselegacyapicmode no | Out-Null # disable legacy APIC
-
 # NETWORK
-# Gaming OS Tweaker - network
-Get-FileFromWeb "https://github.com/sherifmagdy32/gaming_os_tweaker/raw/refs/heads/main/scripts/tweaks/network.cmd" "$env:TEMP\network.cmd"
-& "$env:TEMP\network.cmd" *> $null
+# Gaming OS Tweaker - network [ VERY SLOW ]
+# Get-FileFromWeb "https://github.com/sherifmagdy32/gaming_os_tweaker/raw/refs/heads/main/scripts/tweaks/network.cmd" "$env:TEMP\network.cmd"
+# & "$env:TEMP\network.cmd"
 # HakanFly - WINDOWS-NETWORK-OPTIMIZATIONS
 Invoke-RestMethod "https://github.com/HakanFly/WINDOWS-NETWORK-OPTIMIZATIONS/raw/refs/heads/main/W10ANDW11-NETWORK-TCP-BACKSUBOPTIMIZATION.ps1" | Invoke-Expression | Out-Null
-
 # PERSONALIZATION
 # Download blanc.ico into C:\Windows
 Get-FileFromWeb "https://github.com/benzaria/remove_shortcut_arrow/raw/refs/heads/main/blanc.ico" "C:\\Windows\\blanc.ico"
@@ -1925,16 +1957,15 @@ Get-FileFromWeb "https://github.com/benzaria/remove_shortcut_arrow/raw/refs/head
 if (-not (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons")) {New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" -Force | Out-Null}
 # Set the shortcut arrow overlay to a blank icon
 New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" -Name "29" -PropertyType String -Value "C:\Windows\blanc.ico" -Force | Out-Null
-
 # Windows 10 Stuff
 if ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuild -le 19045) {
 
 	# Disable AppXSvc (AppX Deployment Service)					
-	Set-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\AppXSvc" -Name "Start" -Value 4 -Type DWord	| Out-Null					
+	# Set-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\AppXSvc" -Name "Start" -Value 4 -Type DWord	| Out-Null					
 	# Disable TextInputManagementService (TextInput Management Service)					
 	Set-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\TextInputManagementService" -Name "Start" -Value 4 -Type DWord | Out-Null				
-	# Disable DNS Cache				
-	Set-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Dnscache" -Name "Start" -Value 4 -Type DWord | Out-Null				
+	# Disable DNS Cache	
+	# Set-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Dnscache" -Name "Start" -Value 4 -Type DWord | Out-Null				
 	
 	# Set Desktop Wallpaper and Style
 	Add-Type @"
